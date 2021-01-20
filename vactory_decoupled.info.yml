@@ -77,7 +77,7 @@ dependencies:
   - page_cache
   - path
   - path_alias
-  - recaptcha
+  #- recaptcha
   - rest
   - restui
   - scheduler

@@ -4,12 +4,12 @@ description: 'Enhance jsonapi module to our needs.'
 package: Vactory
 core: 8.x
 dependencies:
-  - backup_migrate
-  - captcha
-  - comment
-  - crop
-  - editor
-  - features
+  #- backup_migrate
+  #- captcha
+  #- comment
+  #- crop
+  #- editor
+  #- features
   - field
   - file_entity
   - filter
@@ -17,19 +17,19 @@ dependencies:
   - jsonapi
   - jsonapi_extras
   - language
-  - linkit
+  #- linkit
   - menu_link_content
-  - metatag
-  - paragraphs
+  #- metatag
+  #- paragraphs
   - path_alias
-  - pathauto
+  #- pathauto
 #  - search
   - search_api
-  - shortcut
-  - simple_oauth
+  #- shortcut
+  #- simple_oauth
   - system
-  - taxonomy
-  - ultimate_cron
+  #- taxonomy
+  #- ultimate_cron
   - vactory_core
   - views
 version: 8.x-1.0

@@ -4,10 +4,10 @@ description: 'Handle user forms & profiles.'
 package: Vactory
 core: 8.x
 dependencies:
-  - better_passwords
-  - content_translation
-  - email_registration
-  - features
+  #- better_passwords
+  #- content_translation
+  #- email_registration
+  #- features
   - field
   - file
   - image

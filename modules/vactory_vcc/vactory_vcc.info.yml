@@ -4,9 +4,9 @@ type: module
 core: 8.x
 dependencies:
   - vactory_core
-  - content_translation
+  #- content_translation
   - field
-  - jsonapi_extras
+  #- jsonapi_extras
   - language
   - menu_ui
   - node

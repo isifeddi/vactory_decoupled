@@ -4,70 +4,70 @@ description: 'Core engine containing helpers & overrides.'
 package: Vactory
 core: 8.x
 dependencies:
-  - backup_migrate
-  - block
-  - block_content
-  - captcha
-  - ckeditor
-  - coffee
-  - comment
-  - content_translation
-  - crop
+  #- backup_migrate
+  #- block
+  #- block_content
+  #- captcha
+  #- ckeditor
+  #- coffee
+  #- comment
+  #- content_translation
+  #- crop
   - datetime
   - datetime_range
-  - dblog
-  - editor
+  #- dblog
+  #- editor
   - entity_reference_revisions
-  - entityqueue
-  - features
+  #- entityqueue
+  #- features
   - field
   - field_group
   - file
   - file_entity
   - filter
-  - image
+  #- image
   - improved_multi_select
-  - jsonapi_extras
+  #- jsonapi_extras
   - language
   - link
-  - linkit
-  - locale
-  - login_security
-  - mailsystem
+  #- linkit
+  #- locale
+  #- login_security
+  #- mailsystem
   - media
   - media_library
   - menu_link_attributes
   - menu_link_content
   - menu_ui
-  - metatag
+  #- metatag
   - node
   - options
-  - paragraphs
+  #- paragraphs
   - path
   - path_alias
-  - pathauto
-  - recaptcha
+  #- pathauto
+  #- recaptcha
   - scheduler
 #  - search
   - search_api
   - search_api_db
   - search_api_exclude_entity
-  - seckit
-  - serialization
-  - shortcut
-  - simple_sitemap
-  - social_api
-  - social_auth
-  - social_auth_facebook
-  - swiftmailer
-  - system
-  - taxonomy
+  #- seckit
+  #- serialization
+  #- shortcut
+  #- simple_sitemap
+  #- social_api
+  #- social_auth
+  #- social_auth_facebook
+  #- swiftmailer
+  #- system
+  #- taxonomy
   - text
-  - ultimate_cron
+  #- ultimate_cron
   - user
   - vactory_dynamic_field
   - vactory_dynamic_field_core_ui
   - vactory_widgets_ui
   - views
-  - warmer
+  #- warmer
 version: 8.x-1.0

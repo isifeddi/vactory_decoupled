@@ -8,7 +8,7 @@ dependencies:
   - search_api
   - search_api_db
   - search_api_exclude_entity
-  - ultimate_cron
+  #- ultimate_cron
   - user
   - vactory_core
   - views

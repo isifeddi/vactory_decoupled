@@ -3,21 +3,21 @@ description: 'Provides News content type and related configuration. Manage your 
 type: module
 core: 8.x
 dependencies:
-  - allowed_formats
-  - content_translation
+  #- allowed_formats
+  #- content_translation
   - datetime
-  - entityqueue
+  #- entityqueue
   - field
-  - jsonapi_extras
+  #- jsonapi_extras
   - language
   - media_library
   - menu_ui
-  - metatag
+  #- metatag
   - node
   - path
-  - pathauto
+  #- pathauto
   - scheduler
-  - taxonomy
+  #- taxonomy
   - text
   - user
   - views

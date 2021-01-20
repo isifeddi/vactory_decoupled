@@ -5,20 +5,20 @@ core: 8.x
 package: Vactory
 dependencies:
   - vactory_core
-  - content_translation
-  - features
+  #- content_translation
+  #- features
   - field
-  - jsonapi_extras
+  #- jsonapi_extras
   - language
   - media_library
   - menu_ui
-  - metatag
+  #- metatag
   - node
   - options
   - path
-  - pathauto
+  #- pathauto
   - scheduler
-  - taxonomy
+  #- taxonomy
   - user
   - views
 core_incompatible: false

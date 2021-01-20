@@ -3,10 +3,10 @@ description: 'Provides Banner type de contenu and related configuration. Manage 
 type: module
 core: 8.x
 dependencies:
-  - captcha
-  - content_translation
+  #- captcha
+  #- content_translation
   - field
-  - jsonapi_extras
+  #- jsonapi_extras
   - language
   - menu_ui
   - node
