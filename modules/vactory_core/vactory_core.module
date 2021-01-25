@@ -360,3 +360,15 @@ function vactory_core_page_attachments(array &$page) {
     $page['#attached']['library'][] = 'vactory_core/ckeditor_config';
   }
 }
+
+/**
+ * Implements hook_xmlsitemap_link_alter().
+ */
+function vactory_core_xmlsitemap_link_alter(array &$link, array $context) {
+  // Prevent homepage from being figured on xml sitemap twice.
+  $front_page = Drupal::config('system.site')->get('page')['front'];
+  if ($link['loc'] === $front_page) {
+    $link['status'] = 0;
+    $link['acccess'] = FALSE;
+  }
+}
