@@ -137,6 +137,15 @@ function vactory_core_form_alter(&$form, FormStateInterface &$form_state, $form_
     $form['display']['display_submitted']['#default_value'] = FALSE;
   }
 
+  // Make revision log message optional.
+  $route_name = Drupal::service('current_route_match')->getRouteName();
+  if ($route_name == 'entity.node.edit_form') {
+    if (isset($form['revision'])) {
+      $form['revision']['#default_value'] = TRUE;
+      $form['revision']['#access'] = FALSE;
+    }
+    unset($form['promote'], $form['sticky']);
+  }
 }
 
 /**
