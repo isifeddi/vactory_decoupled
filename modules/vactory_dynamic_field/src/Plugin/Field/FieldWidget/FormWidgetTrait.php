@@ -98,7 +98,7 @@ trait FormWidgetTrait {
    *   The Form API renderable array.
    */
   // phpcs:disable
-  protected function getFormElement($type, MarkupInterface $label, $default_value, array $options, array $form, FormStateInterface $form_state, $field_name) {
+  protected function getFormElement($type, MarkupInterface $label, $default_value, array $options, array $form, FormStateInterface $form_state, $field_name, $field_id = '', $index = '') {
     // phpcs:enable
     $element = [
       '#type'          => $type,
@@ -144,6 +144,16 @@ trait FormWidgetTrait {
       ], $form, $form_state);
     }
 
+    if ($type == 'url_extended') {
+      if (!isset($default_value['attributes']['id']) || (isset($default_value['attributes']['id']) && empty($default_value['attributes']['id']))) {
+        $timestamp = (new \DateTime())->getTimestamp();
+        $field_id = str_replace('_', '-', strtolower($field_id));
+        $suffix = base64_encode($index . $timestamp);
+        $suffix = str_replace('=', '', strtolower($suffix));
+        $element['#default_value']['attributes']['id'] = $field_id . '-' . $suffix;
+      }
+    }
+    
     return $element_defaults + $element;
   }
 
