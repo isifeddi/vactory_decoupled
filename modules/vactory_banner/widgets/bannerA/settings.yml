@@ -15,6 +15,9 @@ fields:
       label: 'Image Mobile'
     options:
       '#description': 'Cette image sera utiliser dans la version mobile.'
+    background_color:
+      type: text
+      label: 'Background color'
   group_banner_title:
     g_title: 'Title'
     custom_title:
