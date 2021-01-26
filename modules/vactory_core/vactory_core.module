@@ -146,6 +146,16 @@ function vactory_core_form_alter(&$form, FormStateInterface &$form_state, $form_
     }
     unset($form['promote'], $form['sticky']);
   }
+
+  if (in_array($route_name, ['entity.menu.add_link_form', 'entity.menu_link_content.canonical'])) {
+    if (isset($form['options']['attributes']['id']) && empty($form['options']['attributes']['id']['#default_value'])) {
+      $timestamp = (new DateTime())->getTimestamp();
+      $timestamp = base64_encode($timestamp);
+      $timestamp = str_replace('=', '', strtolower($timestamp));
+      $css_id = 'menu-link-' . $timestamp;
+      $form['options']['attributes']['id']['#default_value'] = $css_id;
+    }
+  }
 }
 
 /**

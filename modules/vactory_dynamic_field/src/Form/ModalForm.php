@@ -273,7 +273,7 @@ class ModalForm extends FormBase {
               $ds_field_name = 'm' . substr(md5($ds_field_name), 0, -1);
             }
 
-            $form['components']['extra_field'][$field_id][$field_key] = $this->getFormElement($element_type, $element_label, $element_default_value, $element_options, $form, $form_state, $ds_field_name);
+            $form['components']['extra_field'][$field_id][$field_key] = $this->getFormElement($element_type, $element_label, $element_default_value, $element_options, $form, $form_state, $ds_field_name, $field_id, $field_key);
 
             if ($element_type == 'image') {
               // Restore parent for other fields.
@@ -301,7 +301,7 @@ class ModalForm extends FormBase {
             $ds_field_name = 'm' . substr(md5($ds_field_name), 0, -1);
           }
 
-          $form['components']['extra_field'][$field_id] = $this->getFormElement($element_type, $element_label, $element_default_value, $element_options, $form, $form_state, $ds_field_name);
+          $form['components']['extra_field'][$field_id] = $this->getFormElement($element_type, $element_label, $element_default_value, $element_options, $form, $form_state, $ds_field_name, $field_id);
 
           if ($element_type == 'image') {
             // Restore parent for other fields.
@@ -390,7 +390,7 @@ class ModalForm extends FormBase {
             $ds_field_name = 'f' . substr(md5($ds_field_name), 0, -1);
           }
 
-          $form['components'][$i][$field_id] = $this->getFormElement($element_type, $element_label, $element_default_value, $element_options, $form, $form_state, $ds_field_name);
+          $form['components'][$i][$field_id] = $this->getFormElement($element_type, $element_label, $element_default_value, $element_options, $form, $form_state, $ds_field_name, $field_id, $i);
 
           if ($element_type == 'image') {
             // Restore parent for other fields.
