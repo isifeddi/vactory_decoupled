@@ -67,6 +67,9 @@
             },
             "drupal/media_library_form_element": {
                 "Fixing multiple modals closing": "https://gist.githubusercontent.com/Bahlaouane-Hamza/e956616f7a0680a572837af0df0a7d28/raw/a8050f4c72ac4c7abb11deb05182fb06eebb22a5/media_library_form_element--multiple-modals-closing.patch"
+            },
+            "drupal/swiftmailer": {
+                "Fix undefined index warnings on reset password form": "https://www.drupal.org/files/issues/2020-10-29/3179656-two-undentified-index-notices-2.patch"
             }
         }
     },
