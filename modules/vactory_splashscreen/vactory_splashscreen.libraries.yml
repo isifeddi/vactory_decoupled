@@ -1,0 +1,9 @@
+splash_screen.v1:
+  js:
+    js/splash-screen-v1.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+    - core/jquery.cookie
