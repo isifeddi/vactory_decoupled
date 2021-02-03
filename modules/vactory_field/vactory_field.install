@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * Vactory field module installation logics.
+ */
+
+use Drupal\Core\Field\BaseFieldDefinition;
+
+/**
+ * Install Body CSS Classe(s) field storage for existing projects.
+ */
+function vactory_field_update_8101(&$sandbox) {
+  $entityUpdateManager = \Drupal::entityDefinitionUpdateManager();
+  $newBodyClassDefinition = BaseFieldDefinition::create('string')
+    ->setLabel(t('Body CSS class(es)'))
+    ->setDescription(t('Enter a set of classes (<b>separated with spaces</b>) to add it to body class attribute.'))
+    ->setDisplayOptions('form', [
+      'type'   => 'string_textfield',
+      'weight' => 36,
+    ])
+    ->setDisplayConfigurable('form', FALSE)
+    ->setDisplayConfigurable('view', FALSE)
+    ->setRevisionable(TRUE)
+    ->setTranslatable(TRUE);
+
+  $entityUpdateManager->installFieldStorageDefinition(
+    'node_body_class', 'node', 'vactory_field', $newBodyClassDefinition
+  );
+}
+
+/**
+ * Install Background image field storage.
+ */
+function vactory_field_update_8102(&$sandbox) {
+  $entityUpdateManager = \Drupal::entityDefinitionUpdateManager();
+  $newBgImageDefinition = BaseFieldDefinition::create('entity_reference')
+    ->setLabel(t('Background Image'))
+    ->setDescription(t('The background image of this node.'))
+    ->setSetting('target_type', 'media')
+    ->setSetting('handler_settings', ['target_bundles' => ['image' => 'image']])
+    ->setDisplayConfigurable('form', TRUE)
+    ->setDisplayConfigurable('view', FALSE)
+    ->setTargetEntityTypeId('node')
+    ->setTranslatable(TRUE)
+    ->setDisplayOptions('form', [
+      'type'   => 'media_library_widget',
+      'weight' => 0,
+    ]);
+
+  $entityUpdateManager->installFieldStorageDefinition(
+    'node_bg_image', 'node', 'vactory_field', $newBgImageDefinition
+  );
+}
