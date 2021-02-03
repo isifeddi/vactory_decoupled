@@ -156,6 +156,21 @@ function vactory_core_form_alter(&$form, FormStateInterface &$form_state, $form_
       $form['options']['attributes']['id']['#default_value'] = $css_id;
     }
   }
+
+  // Set default OpenGraph image url token.
+  $route_match = Drupal::service('current_route_match');
+  if (in_array($route_match->getRouteName(), ['entity.node.edit_form', 'node.add'])) {
+    $route_params = $route_match->getParameters();
+    $node_type = !empty($route_params->get('node')) ? $route_params->get('node')->bundle() : $route_params->get('node_type')->get('type');
+    if (isset($form['field_vactory_meta_tags'])) {
+      $opengraph_default_images = Drupal::service('config.factory')
+        ->get('vactory_core.opengraph_default_image.settings')
+        ->get('default_content_opengraph_images');
+      $form['field_vactory_meta_tags']['widget'][0]['open_graph']['og_image']['#default_value'] = $opengraph_default_images[$node_type]['default_opengraph_image'];
+      $form['field_vactory_meta_tags']['widget'][0]['open_graph']['og_image_url']['#default_value'] = $opengraph_default_images[$node_type]['default_opengraph_image'];
+      $form['field_vactory_meta_tags']['widget'][0]['open_graph']['og_image_secure_url']['#default_value'] = $opengraph_default_images[$node_type]['default_opengraph_image'];
+    }
+  }
 }
 
 /**

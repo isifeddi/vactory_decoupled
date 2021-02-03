@@ -1,0 +1,7 @@
+vactory_metatag_opengraph.defaults:
+  path: 'admin/config/search/metatag/node/vactory-metatag-opengraph-default-image'
+  defaults:
+    _title: 'Vactory Metatag OpenGraph Default Image'
+    _form: '\Drupal\vactory_core\Form\OpenGraphMetaDefaultImage'
+  requirements:
+    _permission: 'administer site configuration'
