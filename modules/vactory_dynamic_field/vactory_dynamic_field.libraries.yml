@@ -56,3 +56,10 @@ dynamic.form_modal:
   dependencies:
     - vactory_dynamic_field/dynamic.libraries.jquery.select2
 
+drag_and_drop:
+  js:
+    libraries/sortable/Sortable.min.js: { }
+    js/drag_and_drop.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettingss

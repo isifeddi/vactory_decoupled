@@ -311,17 +311,39 @@ class ModalForm extends FormBase {
       }
     }
 
+    $is_multiple = FALSE;
+    $component_wrapper_type = 'fieldset';
+    if (isset($settings['multiple']) && (bool) $settings['multiple'] === TRUE) {
+      global $base_url;
+      $drag_icon = $base_url . '/' . drupal_get_path('module', 'vactory_dynamic_field') . '/icons/icon-drag-move.svg';
+      $icon_drag = '<img src="' . $drag_icon .'" class="df-components-sortable-handler"/>';
+      $component_wrapper_type = 'details';
+      $is_multiple = TRUE;
+    }
+
     // Add component fields.
     for ($i = 0; $i < $this->widgetRows; $i++) {
       // Components wrapper.
       $form['components'][$i] = [
-        '#type'          => 'fieldset',
+        '#type'          => $component_wrapper_type,
         '#title'         => $this->t('Component'),
         '#title_display' => 'invisible',
         '#attributes'    => [
-          'style' => 'margin-bottom: 3px;',
+          'style' => 'margin-bottom: 3px; position: relative;',
         ],
       ];
+
+      if ($is_multiple) {
+        // If multiple components case then add drag icon.
+        $form['components'][$i]['#title'] = $this->t('Component') . ' ' . ($i+1) . ' ' . $icon_drag;;
+        $form['components'][$i]['#open'] = TRUE;
+        if ($i === 0) {
+          $form['components'][$i]['#prefix'] = '<div id="sortable-components">';
+        }
+        if ($i === $this->widgetRows - 1) {
+          $form['components'][$i]['#suffix'] = '</div>';
+        }
+      }
 
       // Form elements.
       foreach ($settings['fields'] as $field_id => $field) {
@@ -412,6 +434,9 @@ class ModalForm extends FormBase {
           '#min'           => 1,
           '#size'          => 5,
           '#default_value' => $weight_value,
+          '#attributes' => [
+            'class' => ['df-components-weight'],
+          ],
         ];
       }
 
@@ -460,6 +485,8 @@ class ModalForm extends FormBase {
           ],
         ];
       }
+      // Attach drag and drop DF module library in multiple components case.
+      $form['#attached']['library'][] = 'vactory_dynamic_field/drag_and_drop';
     }
 
     $form['actions'] = ['#type' => 'actions'];
