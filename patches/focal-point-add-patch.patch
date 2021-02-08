@@ -1,0 +1,211 @@
+diff --git a/focal_point.info.yml b/focal_point.info.yml
+index 50b663e..bc280a8 100644
+--- a/focal_point.info.yml
++++ b/focal_point.info.yml
+@@ -1,8 +1,7 @@
+ name: Focal Point
+ type: module
+ description: Allows users to specify the focal point of an image for use during cropping.
+-core: 8.x
+-core_version_requirement: ^8 || ^9
++core_version_requirement: ^8.8 || ^9
+ package: Media
+ test_dependencies:
+   - crop:crop
+diff --git a/focal_point.module b/focal_point.module
+index 19307a5..2dee9a5 100644
+--- a/focal_point.module
++++ b/focal_point.module
+@@ -8,6 +8,7 @@
+  * @todo add test drive functionality?
+  */
+ 
++use Drupal\Component\Utility\NestedArray;
+ use Drupal\Core\Entity\EntityInterface;
+ use Drupal\Core\Entity\FieldableEntityInterface;
+ use Drupal\Core\Form\FormStateInterface;
+@@ -109,3 +110,51 @@ function focal_point_entity_update(EntityInterface $entity) {
+ function focal_point_imce_supported_widgets_alter(array &$widgets) {
+   $widgets[] = 'image_focal_point';
+ }
++
++/**
++ * Implements hook_form_FORM_ID_alter().
++ */
++function focal_point_form_media_library_add_form_upload_alter(array &$form, FormStateInterface $form_state) {
++  // Get any media items that are in the process of being added.
++  // @see \Drupal\media_library\Form\AddFormBase::getAddedMediaItems().
++  $media = $form_state->get('media') ?: [];
++  /** @var \Drupal\media\MediaInterface $item */
++  foreach ($media as $delta => $item) {
++    $element = &$form['media'][$delta]['fields'];
++    $source_field = $element['#source_field_name'];
++    // If the source field is configured to use Focal Point, add a #process
++    // callback which replaces the static preview thumbnail with the Focal Point
++    // widget.
++    $component = \Drupal::service('entity_display.repository')
++      ->getFormDisplay('media', $item->bundle(), 'media_library')
++      ->getComponent($source_field);
++    if ($component && $component['type'] === 'image_focal_point' && isset($element[$source_field])) {
++      $element[$source_field]['widget'][0]['#process'][] = '_focal_point_replace_media_library_preview';
++    }
++  }
++}
++
++/**
++ * Process callback for the preview image of a new item in the media library.
++ */
++function _focal_point_replace_media_library_preview(array $element, FormStateInterface $form_state, array &$form) {
++  // We expect $element to be an image field widget with Focal Point enabled.
++  if (!empty($element['preview'])) {
++    // Temporarily override the preview access, which is normally set to FALSE
++    // by the media library, in favor of its own static preview thumbnail. In
++    // this case, though, Focal Point is using the preview to provide its
++    // widget, so we want to be sure that's visible.
++    $preview_access = $element['preview']['#access'];
++    $element['preview']['#access'] = TRUE;
++    // We expect the array parents to be something like
++    // ['media', $delta, 'fields', $source_field, 'widget', 0]. Here, we
++    // transform that to target the static preview thumbnail, which we expect to
++    // be at ['media', $delta, 'preview', 'thumbnail'].
++    $target = $element['#array_parents'];
++    array_splice($target, -4, count($target), ['preview', 'thumbnail']);
++    NestedArray::setValue($form, $target, $element['preview']);
++    // We've done what we needed to do, so restore the original preview access.
++    $element['preview']['#access'] = $preview_access;
++  }
++  return $element;
++}
+diff --git a/tests/src/FunctionalJavascript/MediaLibraryIntegrationTest.php b/tests/src/FunctionalJavascript/MediaLibraryIntegrationTest.php
+new file mode 100644
+index 0000000..9ba048e
+--- /dev/null
++++ b/tests/src/FunctionalJavascript/MediaLibraryIntegrationTest.php
+@@ -0,0 +1,127 @@
++<?php
++
++namespace Drupal\Tests\focal_point\FunctionalJavascript;
++
++use Behat\Mink\Element\DocumentElement;
++use Drupal\field\Entity\FieldConfig;
++use Drupal\field\Entity\FieldStorageConfig;
++use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
++use Drupal\Tests\media\Traits\MediaTypeCreationTrait;
++use Drupal\Tests\TestFileCreationTrait;
++
++/**
++ * Tests Focal Point's integration with Media Library.
++ *
++ * @group focal_point
++ */
++class MediaLibraryIntegrationTest extends WebDriverTestBase {
++
++  use MediaTypeCreationTrait;
++  use TestFileCreationTrait;
++
++  /**
++   * {@inheritdoc}
++   */
++  protected $defaultTheme = 'stark';
++
++  /**
++   * {@inheritdoc}
++   */
++  protected static $modules = [
++    'node',
++    'media_library',
++    'focal_point',
++  ];
++
++  /**
++   * {@inheritdoc}
++   */
++  protected function setUp() {
++    parent::setUp();
++
++    $this->drupalCreateContentType([
++      'type' => 'article',
++    ]);
++    $this->createMediaType('image', [
++      'id' => 'image',
++    ]);
++
++    $field_storage = FieldStorageConfig::create([
++      'entity_type' => 'node',
++      'field_name' => 'field_image',
++      'type' => 'entity_reference',
++      'settings' => [
++        'target_type' => 'media',
++      ],
++    ]);
++    $field_storage->save();
++
++    FieldConfig::create([
++      'field_storage' => $field_storage,
++      'bundle' => 'article',
++      'label' => 'Image',
++      'settings' => [
++        'handler_settings' => [
++          'target_bundles' => [
++            'image' => 'image',
++          ],
++        ],
++      ],
++    ])->save();
++
++    // Ensure that the media type is using Focal Point in its media library
++    // form display.
++    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
++    $display_repository = $this->container->get('entity_display.repository');
++    $display_repository->getFormDisplay('media', 'image', 'media_library')
++      ->setComponent('field_media_image', [
++        'type' => 'image_focal_point',
++        'settings' => [
++          'preview_image_style' => 'media_library',
++        ],
++      ])
++      ->save();
++    // Ensure that the media field on the Article content type is using the
++    // media library.
++    $display_repository->getFormDisplay('node', 'article')
++      ->setComponent('field_image', [
++        'type' => 'media_library_widget',
++      ])
++      ->save();
++
++    $user = $this->drupalCreateUser([
++      'create article content',
++      'create media',
++      'access media overview',
++    ]);
++    $this->drupalLogin($user);
++  }
++
++  /**
++   * Tests Focal Point integration with the media library.
++   */
++  public function testFocalPointMediaField() {
++    $page = $this->getSession()->getPage();
++    $assert_session = $this->assertSession();
++
++    $files = $this->getTestFiles('image');
++    $path = $this->container->get('file_system')->realpath($files[0]->uri);
++    $this->assertNotEmpty($path);
++
++    // Upload an image and ensure that a single Focal Point widget shows up.
++    $this->drupalGet('/node/add/article');
++    $page->pressButton('Add media');
++    $file_field = $assert_session->waitForField('Add file');
++    $this->assertNotEmpty($file_field);
++    $file_field->attachFile($path);
++
++    $widget_exists = $this->getSession()
++      ->getPage()
++      ->waitFor(10, function (DocumentElement $page) {
++        $elements = $page->findAll('css', '[data-media-library-added-delta] .focal-point-indicator');
++        return count($elements) === 1;
++      });
++    $this->assertTrue($widget_exists);
++  }
++
++}
