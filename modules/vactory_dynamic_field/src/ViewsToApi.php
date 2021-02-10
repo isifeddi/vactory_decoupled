@@ -190,7 +190,7 @@ class ViewsToApi
             $fileResult['fid'] = $fid;
             $fileResult['file_name'] = $media->label();
             $fileResult['base_url'] = $image_app_base_url;
-            $fileResult['meta'] = $media->get('field_media_image')->first()->getValue();
+            $fileResult['meta'] = $file->get('field_media_image')->first()->getValue();
 
             foreach ($appliedImageStyle as $imageStyle) {
               $fileResult[$imageStyle->id()] = $imageStyle->buildUrl($uri);
