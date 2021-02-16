@@ -136,16 +136,6 @@ function vactory_core_form_alter(&$form, FormStateInterface &$form_state, $form_
     unset($form['workflow']['options']['#default_value']['sticky']);
     $form['display']['display_submitted']['#default_value'] = FALSE;
   }
-
-  // Make revision log message optional.
-  $route_name = Drupal::service('current_route_match')->getRouteName();
-  if ($route_name == 'entity.node.edit_form') {
-    if (isset($form['revision'])) {
-      $form['revision']['#default_value'] = TRUE;
-      $form['revision']['#access'] = FALSE;
-    }
-    unset($form['promote'], $form['sticky']);
-  }
 }
 
 /**
@@ -157,8 +147,9 @@ function vactory_core_form_node_form_alter(&$form, FormStateInterface $form_stat
 
   // Make revision log required.
   $node = $form_state->getFormObject()->getEntity();
-  if (isset($form['revision_log']) && !$node->isNew()) {
-    $form['revision_log']['widget'][0]['value']['#required'] = TRUE;
+  if (isset($form['revision'])) {
+    $form['revision']['#default_value'] = TRUE;
+    $form['revision']['#access'] = FALSE;
   }
 
   // Node CSS class.
